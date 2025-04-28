@@ -1,5 +1,7 @@
-body {
-  font-family: "Inter", sans-serif;
-}
+
 
 @import "tailwindcss";
+
+html {
+  font-family: "Inter", sans-serif;
+}
