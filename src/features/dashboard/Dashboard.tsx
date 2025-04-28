@@ -1,15 +1,21 @@
-import React from "react";
+
+import { Col, Row } from "antd";
 import Sidebar from "./pages/SideBar/Sidebar";
 import { Outlet } from "react-router-dom";
 
 const Dashboard = () => {
   return (
     <div>
-      <div className="flex justify-center items-center">
-        <h1 className="text-3xl font-bold">Dashboard</h1>
+      <Row gutter={[16, 16]} className="h-screen">
+        <Col span={4} className="bg-white shadow-md p-4">
         <Sidebar />
-      </div>
-      <Outlet />
+        </Col>
+      
+       <Col span={20} className="bg-gray-100 h-screen overflow-y-auto">
+        <Outlet />
+        </Col>
+      </Row>
+      
     </div>
   );
 };
