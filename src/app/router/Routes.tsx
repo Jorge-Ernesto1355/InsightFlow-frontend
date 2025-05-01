@@ -6,6 +6,7 @@ import Overview from "../../features/dashboard/pages/overview/Overview";
 import RiskFactors from "../../features/dashboard/pages/RiskFactors/RiskFactors";
 import PredictionTool from "../../features/dashboard/pages/predictionTool/PredictionTool";
 import GroupDetails from "../../features/dashboard/pages/groupDetails/GroupDetails";
+import Layout from "../../shared/components/Layout";
 
 export const router = createBrowserRouter([
   {
@@ -20,7 +21,9 @@ export const router = createBrowserRouter([
   },
   {
     path: "/dashboard",
-    element: <Dashboard />,
+    element: <Layout>
+      <Dashboard />
+    </Layout>,
     children: [
       { path: "  ", element: <Home /> },
       {
