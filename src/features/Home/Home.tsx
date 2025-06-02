@@ -1,4 +1,3 @@
-import Navbar from "../../shared/components/Navbar";
 import UploadFile from "./components/UploadFile";
 
 const Home = () => {
@@ -6,7 +5,7 @@ const Home = () => {
     <div className="w-full  justify-center items-center flex flex-col">
       <section className="pt-5 flex flex-col justify-center items-center w-full">
         <header className="flex flex-col justify-center items-center my-3 space-y-5">
-          <h2 className="font font-sans text-4xl">CSV File Analyser</h2>
+          <h2 className="text-4xl  font-inter font-bold">CSV File Analyser</h2>
           <p className=" text-center max-w-3xl text-gray-500 font-medium">
             Upload your CSV files to analyze patterns and trends using AI. Our
             system will process your data and provide insights
