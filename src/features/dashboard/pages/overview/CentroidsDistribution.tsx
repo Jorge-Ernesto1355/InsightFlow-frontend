@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Card, Tooltip } from "antd";
 import { InfoCircle } from "iconoir-react";
-import { spawn } from "child_process";
 
 type CentroidChartProps = {
   mockData: any;
