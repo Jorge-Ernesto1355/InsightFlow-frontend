@@ -1,25 +1,58 @@
-import { Group, HomeSimple, ProfileCircle, ReportsSolid } from "iconoir-react";
-import { Link } from "react-router-dom";
+import { Divider } from "antd";
+import {
+  Database,
+  Group,
+  HomeSimple,
+  ProfileCircle,
+  Sparks,
+  StatsUpSquare,
+  WarningTriangle,
+} from "iconoir-react";
+import { Link, useLocation } from "react-router-dom";
+import { palletesCollor } from "../../../../resourses/palletesCollor";
 
 const Sidebar = () => {
   const links = [
     { to: "/dashboard/overview", Icon: HomeSimple, label: "Overview" },
+    {
+      to: "/dashboard/risk-factors",
+      Icon: WarningTriangle,
+      label: "Risk Factors",
+    },
     { to: "/dashboard/group-details", Icon: Group, label: "Group Details" },
-    { to: "/dashboard/prediction-tool", Icon: ProfileCircle, label: "Prediction tool" },
-    { to: "/dashboard/risk-factors", Icon: ReportsSolid, label: "Risk Factors" },
+    {
+      to: "/dashboard/prediction-tool",
+      Icon: Sparks,
+      label: "Ask to AI",
+    },
+    {
+      to: "/dashboard/original-data",
+      Icon: Database,
+      label: "Original Data",
+    },
   ];
+
+  const location = useLocation();
+  const pathname = location.pathname;
 
   return (
     <div className="">
-      <ul className="flex space-x-4 flex-col">
-        <li className="flex justify-start items-center space-x-2 p-2  ml-2">
-          <h3 className="text-black font-bold text-lg">Dashboard</h3>
-        </li>
+      <div className="flex justify-start items-center space-x-2 ml-3">
+        <StatsUpSquare color={palletesCollor.primary} fontSize={20} />
+        <span className=" font-bold text-lg font-inter ">DataCluster</span>
+      </div>
+      <Divider />
+      <ul className="flex justify-center items-start space-x-4 flex-col">
         {links.map(({ to, Icon, label }) => (
-          <li className="flex justify-start items-center space-x-3 p-2 rounded-md hover:bg-gray-100 ml-2" key={to}>
+          <li
+            className={`flex w-64 ml-4 mt-2 justify-start  hover:bg-gray-100  space-x-3 p-3 rounded-md  ${
+              pathname === to ? "text-primary bg-blue-50" : "text-gray-600"
+            } `}
+            key={to}
+          >
             <Icon />
             <Link to={to}>
-              <h3 className="text-black">{label}</h3>
+              <h3 className="text-center font-inter font-semibold ">{label}</h3>
             </Link>
           </li>
         ))}
