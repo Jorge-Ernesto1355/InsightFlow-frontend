@@ -4,9 +4,10 @@ import Root from "../../Root";
 import Dashboard from "../../features/dashboard/Dashboard";
 import Overview from "../../features/dashboard/pages/overview/Overview";
 import RiskFactors from "../../features/dashboard/pages/RiskFactors/RiskFactors";
-import PredictionTool from "../../features/dashboard/pages/predictionTool/PredictionTool";
+
 import GroupDetails from "../../features/dashboard/pages/groupDetails/GroupDetails";
-import Layout from "../../shared/components/Layout";
+import OriginalData from "../../features/dashboard/pages/originalData/OriginalData";
+import AIAnswers from "../../features/dashboard/pages/AIAnswers/AIAnswers";
 
 export const router = createBrowserRouter([
   {
@@ -21,11 +22,9 @@ export const router = createBrowserRouter([
   },
   {
     path: "/dashboard",
-    element: <Layout>
-      <Dashboard />
-    </Layout>,
+    element: <Dashboard />,
     children: [
-      { path: "  ", element: <Home /> },
+      { index: true, element: <Home /> },
       {
         path: "overview",
         element: <Overview />,
@@ -36,11 +35,15 @@ export const router = createBrowserRouter([
       },
       {
         path: "prediction-tool",
-        element: <PredictionTool />,
+        element: <AIAnswers />,
       },
       {
         path: "group-details",
         element: <GroupDetails />,
+      },
+      {
+        path: "original-data",
+        element: <OriginalData />,
       },
     ],
   },
