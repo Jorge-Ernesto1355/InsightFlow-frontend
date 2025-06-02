@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { huggingFaceStream } from "../api/huggingFaceStream";
 import { ChatMessage } from "../types/types";
@@ -6,7 +6,6 @@ import Message from "./Message";
 import ChatInput from "./ChatInput";
 import { Card, Col, Flex, message, Row } from "antd";
 import { getHoursAndMiutes } from "../utils/getHoursAndMinute";
-import { TruckLength } from "iconoir-react";
 
 const INITIAL_MESSAGE_CONTENT =
   "Hi, I'm your data analysis assistant. You can ask me about clusters, patterns, risk factors, or any insights you'd like to uncover in your data.";
@@ -24,7 +23,7 @@ const createMessage = (
   id: crypto.randomUUID(),
   role,
   content,
-  timestamp: timestamp || getHoursAndMiutes(new Date()),
+  timestamp: timestamp ?? getHoursAndMiutes(new Date()),
   error: null,
 });
 
@@ -45,6 +44,10 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ apiKey }) => {
   const [messages, setMessages] = useState<ChatMessage[]>([
     ...createInitialMessages(),
   ]);
+  const chatEndRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   const handleStreamChunk = useCallback((newChunk: string) => {
     setMessages((prev) => {
@@ -77,6 +80,12 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ apiKey }) => {
     options: HUGGING_FACE_CONFIG,
   });
 
+  useEffect(() => {
+    if (isError && error) {
+      message.error(`Error al enviar mensaje: ${error.message}`);
+    }
+  }, [isError, error]);
+
   const handleSendMessage = useCallback(
     async (inputValue: string) => {
       if (!inputValue.trim() || isLoading) return;
@@ -96,12 +105,9 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ apiKey }) => {
         message.error(errorMessage);
       }
     },
-    [messages, isLoading, sendMessage]
+    [isLoading, sendMessage]
   );
 
-  if (isError && error) {
-    message.error(`Error al enviar mensaje: ${error.message}`);
-  }
   return (
     <Card
       className={
@@ -111,7 +117,10 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ apiKey }) => {
       <Row className="h-full ">
         <Flex className="h-full flex-col w-full">
           <Col span={100} className="w-full ">
-            <div className="scrollable h-[calc(100vh-200px)] overflow-y-auto ">
+            <div
+              ref={chatEndRef}
+              className="scrollable h-[calc(100vh-200px)] overflow-y-auto "
+            >
               {messages.map((message) => (
                 <Message key={message.id} message={message} />
               ))}
