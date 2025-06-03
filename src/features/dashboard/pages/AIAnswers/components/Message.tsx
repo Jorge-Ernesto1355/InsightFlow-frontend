@@ -44,7 +44,7 @@ const Message: React.FC<{ message: ChatMessage }> = ({ message }) => {
           </p>
           <Flex className="items-center ">
             <div className="text-xs opacity-70 ">{message.timestamp}</div>
-            <CopyIconButton text={message.content} />
+            {!isUser && <CopyIconButton text={message.content} />}
           </Flex>
         </div>
       </div>
