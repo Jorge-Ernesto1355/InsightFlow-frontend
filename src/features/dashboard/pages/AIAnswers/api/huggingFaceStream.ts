@@ -27,15 +27,25 @@ export const huggingFaceStream = ({
   });
 
   const queryClient = useQueryClient();
-  const abnortControllerRef = useRef<AbortController | null>(null);
+  const abortControllerRef = useRef<AbortController | null>(null); // renamed here
+  const isStreamingRef = useRef<boolean>(false);
 
   const streamingMutation = useMutation({
     mutationFn: async (messages: ChatMessage[]) => {
-      if (abnortControllerRef.current) {
-        abnortControllerRef.current.abort();
+      // Input validation
+      if (!Array.isArray(messages) || messages.length === 0) {
+        throw new Error("`messages` must be a non-empty array.");
+      }
+      if (typeof options !== "object" || options === null) {
+        throw new Error("`options` must be a valid object.");
       }
 
-      abnortControllerRef.current = new AbortController();
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+
+      abortControllerRef.current = new AbortController();
+      isStreamingRef.current = true;
 
       const client = new InferenceClient(apiKey);
       let fullResponse = "";
@@ -59,8 +69,24 @@ export const huggingFaceStream = ({
           max_tokens: options.maxTokens || 500,
         });
 
+        let updateBuffer = "";
+        let updateTimeout: NodeJS.Timeout | null = null;
+
+        const flushUpdate = () => {
+          setStreamResponse((prev) => ({
+            ...prev,
+            currentChunk: updateBuffer,
+            fullResponse: fullResponse,
+          }));
+          updateBuffer = "";
+          updateTimeout = null;
+        };
+
         for await (const chunk of stream) {
-          if (abnortControllerRef.current?.signal.aborted) {
+          if (
+            !isStreamingRef.current ||
+            abortControllerRef.current?.signal.aborted
+          ) {
             throw new Error("Request was aborted");
           }
 
@@ -70,15 +96,15 @@ export const huggingFaceStream = ({
 
             if (newContent) {
               fullResponse += newContent;
-              setStreamResponse((prev) => ({
-                ...prev,
-                currentChunk: newContent,
-                fullResponse: fullResponse,
-              }));
+              updateBuffer += newContent;
+              if (!updateTimeout) {
+                updateTimeout = setTimeout(flushUpdate, 50); // debounce interval
+              }
             }
             if (chunk.choices[0].finish_reason) break;
           }
         }
+        if (updateBuffer) flushUpdate();
 
         return {
           content: fullResponse,
@@ -96,7 +122,7 @@ export const huggingFaceStream = ({
           isStreaming: false,
           currentChunk: "",
         }));
-        abnortControllerRef.current = null;
+        abortControllerRef.current = null; // renamed here
       }
     },
     onSuccess: () => {
@@ -113,9 +139,10 @@ export const huggingFaceStream = ({
   });
 
   const cancelStream = useCallback(() => {
-    if (abnortControllerRef.current) {
-      abnortControllerRef.current.abort();
-      abnortControllerRef.current = null;
+    isStreamingRef.current = false;
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
       setStreamResponse((prev) => ({
         ...prev,
         isStreaming: false,
@@ -123,11 +150,14 @@ export const huggingFaceStream = ({
       }));
       streamingMutation.reset();
     }
-  }, [streamingMutation]);
+  }, [streamingMutation, setStreamResponse]);
 
-  const sendMessage = useCallback(async (messages: ChatMessage[]) => {
-    return streamingMutation.mutate(messages);
-  }, []);
+  const sendMessage = useCallback(
+    async (messages: ChatMessage[]) => {
+      return streamingMutation.mutateAsync(messages);
+    },
+    [streamingMutation]
+  );
 
   return {
     sendMessage,
