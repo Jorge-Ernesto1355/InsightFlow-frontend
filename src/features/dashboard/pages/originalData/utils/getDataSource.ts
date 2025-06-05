@@ -2,6 +2,7 @@ import React from "react";
 import { columnsStats, sourceMedatada } from "../models/metadata";
 
 const getDataSource = (data: columnsStats): sourceMedatada[] => {
+  if (!data || !Object.keys(data).length) return [];
   return Object.entries(data).map(([column, stats]: [string, any], index) => ({
     key: index.toString(),
     column,
