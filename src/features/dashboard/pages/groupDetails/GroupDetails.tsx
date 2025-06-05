@@ -6,12 +6,15 @@ import RegistersPerGroup from "./components/RegistersPerGroup";
 import SelectCluster from "./components/SelectCluster";
 import { getSelectClusters } from "./utils/getSelectClusters";
 import { useLocation } from "react-router-dom";
+import useStore from "../../../../shared/store/AIStore";
 
 const GroupDetails = () => {
   const useQuery = () => new URLSearchParams(useLocation().search);
   const query = useQuery();
   const cluster = parseInt(query.get("cluster") || "0", 10);
-  const clustersToSelect = getSelectClusters(mockData.data.clusters);
+  const data = useStore((data) => data.data);
+
+  const clustersToSelect = getSelectClusters(data?.clusters || []);
 
   return (
     <div className="p-4 font-inter">
@@ -27,15 +30,13 @@ const GroupDetails = () => {
       </div>
       <Row gutter={[16, 16]} className="mt-5">
         <Col span={12}>
-          <DistributtionGroup values={mockData.data.centroids[cluster]} />
+          <DistributtionGroup values={data.centroids[cluster]} />
         </Col>
         <Col span={12}>
-          <DominantValuesPanel
-            cluster={mockData.data.cluster_summaries[cluster]}
-          />
+          <DominantValuesPanel cluster={data.cluster_summaries[cluster]} />
         </Col>
       </Row>
-      <RegistersPerGroup registers={mockData.data.cluster_data[cluster]} />
+      <RegistersPerGroup registers={data?.cluster_data?.[cluster] || []} />
     </div>
   );
 };
