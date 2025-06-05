@@ -1,39 +1,49 @@
-import { message, UploadProps, Upload } from "antd";
+import { UploadProps, Upload } from "antd";
 const { Dragger: DraggerAntd } = Upload;
 
 import { Archive, CloudUpload } from "iconoir-react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { beforeUpload } from "../utils/beforeUpload";
+import { handleUploadError } from "../utils/handleUploadError";
+import { useNavigate } from "react-router-dom";
+import { HandleUploadComplete } from "../utils/HandleUploadComplete";
+import useStore from "../../../shared/store/AIStore";
+
+export const uploadConfig = {
+  maxFileSize: 10 * 1024 * 1024, // 10MB
+  allowedTypes: [".csv"],
+  apiEndpoint: import.meta.env.VITE_API_BACKEND_URL || "http://localhost:8000",
+  defaultClusters: 3,
+};
 
 const Dragger = () => {
   const navigate = useNavigate();
-
+  const { setData, setProcessingTime } = useStore();
   const props: UploadProps = {
     name: "file",
-    multiple: true,
-    action: "http://localhost:8000/analyze?n_clusters=3",
+    multiple: false,
+    action: `${uploadConfig.apiEndpoint}/analyze?n_clusters=${uploadConfig.defaultClusters}`,
+    beforeUpload: (file) => beforeUpload(file),
     onChange(info) {
       const { status } = info.file;
-      if (status !== "uploading") {
-        console.log(info.file, info.fileList);
-      }
-      if (status === "done") {
-        if (info.file.response.status === "error") {
-          message.error(info.file.response.message);
-        }
 
-        if (info.file.response.status === "success") {
-          message.success(
-            `Analysis Completed Successfully, redirecting to dashboard...`
-          );
-          navigate("/dashboard");
-        }
-      } else if (status === "error") {
-        message.error(`${info.file.name} file upload failed.`);
-      }
+      if (status === "done")
+        HandleUploadComplete({
+          file: info.file,
+          navigate,
+          setData,
+          setProcessingTime,
+        });
+
+      if (status === "error") handleUploadError(info.file);
     },
-    showUploadList: false,
+
+    showUploadList: {
+      showPreviewIcon: false,
+      showRemoveIcon: true,
+      showDownloadIcon: false,
+    },
     className: "w-full h-full",
-    accept: ".csv",
+    accept: uploadConfig.allowedTypes.join(","),
   };
   return (
     <DraggerAntd {...props}>
