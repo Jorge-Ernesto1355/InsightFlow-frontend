@@ -34,16 +34,15 @@ const ChatInput = ({
     }
   }, [disabled]);
 
-  useEffect(()=> {
-      const subscription  = messageService.sendMessage$.subscribe((message)=> {
-      
-        if(!message) return 
-        onSendMessage(message)
-        setInput("")
-      })
-      
-      return () => subscription.unsubscribe()
-  }, [])  
+  useEffect(() => {
+    const subscription = messageService.sendMessage$.subscribe((message) => {
+      if (!message) return;
+      onSendMessage(message);
+      setInput("");
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   return (
     <div className="flex items-center space-x-2 ">
