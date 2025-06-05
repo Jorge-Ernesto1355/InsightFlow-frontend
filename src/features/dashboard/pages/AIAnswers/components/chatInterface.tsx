@@ -86,7 +86,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ apiKey }) => {
   
   useEffect(() => { 
     if(isLoading) {
-      setMessages((prev)=> ([...prev, createMessage("assistant", "hola", getHoursAndMiutes(new Date(0)), true)]))
+      setMessages((prev)=> ([...prev, createMessage("assistant", "", getHoursAndMiutes(new Date(0)), true)]))
     }
   }, [isLoading]);
 
