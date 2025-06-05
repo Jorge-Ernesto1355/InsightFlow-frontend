@@ -1,5 +1,4 @@
 import { Card, Table } from "antd";
-import React from "react";
 
 interface Register {
   [key: string]: any;
@@ -40,7 +39,6 @@ const RegistersPerGroup = ({ registers = [] }: Props) => {
         <Table
           dataSource={registers}
           columns={columns}
-          pagination={false}
           bordered={false}
           className="custom-ant-table"
         />
