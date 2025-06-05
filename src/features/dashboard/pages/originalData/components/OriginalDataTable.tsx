@@ -13,7 +13,6 @@ const OriginalDataTable = ({ data }: Props) => {
   }
 
   const columns = getColumnsOriginalData(data);
-
   const dataSource = getDataSourceOriginalData(data);
 
   return (
