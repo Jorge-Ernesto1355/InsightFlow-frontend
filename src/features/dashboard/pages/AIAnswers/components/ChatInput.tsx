@@ -1,6 +1,7 @@
 import { ArrowUp } from "iconoir-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Loader from "./Loader";
+import { messageService } from "../services/SuggestionQuestion";
 
 interface ChatInputProps {
   onSendMessage: (message: string) => void;
@@ -32,6 +33,17 @@ const ChatInput = ({
       inputRef.current.focus();
     }
   }, [disabled]);
+
+  useEffect(()=> {
+      const subscription  = messageService.sendMessage$.subscribe((message)=> {
+      
+        if(!message) return 
+        onSendMessage(message)
+        setInput("")
+      })
+      
+      return () => subscription.unsubscribe()
+  }, [])  
 
   return (
     <div className="flex items-center space-x-2 ">
