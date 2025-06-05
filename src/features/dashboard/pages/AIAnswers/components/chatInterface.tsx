@@ -6,7 +6,7 @@ import Message from "./Message";
 import ChatInput from "./ChatInput";
 import { Card, Col, Flex, message, Row } from "antd";
 import { getHoursAndMiutes } from "../utils/getHoursAndMinute";
-import { mockData } from "../../../../../../mockData";
+import { GeneralClusteringData } from "../utils/enhancePrompt/types";
 
 const INITIAL_MESSAGE_CONTENT =
   "Hi, I'm your data analysis assistant. You can ask me about clusters, patterns, risk factors, or any insights you'd like to uncover in your data.";
@@ -41,9 +41,13 @@ const createInitialMessages = (): ChatMessage[] => [
 interface ChatInterfaceProps {
   apiKey: string;
   className?: string;
+  data: GeneralClusteringData;
 }
 
-export const ChatInterface: React.FC<ChatInterfaceProps> = ({ apiKey }) => {
+export const ChatInterface: React.FC<ChatInterfaceProps> = ({
+  apiKey,
+  data,
+}) => {
   const [messages, setMessages] = useState<ChatMessage[]>([
     ...createInitialMessages(),
   ]);
@@ -53,7 +57,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ apiKey }) => {
       apiKey,
       onChunk: (newChunk) => handleStreamChunk(newChunk),
       options: HUGGING_FACE_CONFIG,
-      data: mockData.data,
+      data,
     });
 
   const chatEndRef = useRef<HTMLDivElement>(null);
