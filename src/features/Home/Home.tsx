@@ -8,7 +8,7 @@ import { Divider } from "antd";
 
 const Home = () => {
   return (
-    <div className="w-full  justify-center items-center flex flex-col">
+    <div className="w-full min-h-screen bg-gradient-to-br from-slate-50 via-blue-50  to-indigo-50 justify-center items-center flex flex-col">
       <header className=" mt-10 flex flex-col w-full justify-center items-center">
         <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-2xl mb-6">
           <FileSpreadsheet className="h-8 w-8 text-white" />
@@ -24,7 +24,7 @@ const Home = () => {
       </header>
       <section className="pt-5 flex flex-col  items-center m-auto w-full">
         <Advantages advantages={advantages} />
-        <div className="w-4/5 mx-auto">
+        <div className="w-2/4 flex flex-col items-center justify-center bg-white p-5 shadow-lg rounded-lg ">
           <Dragger />
           <Divider className="my-5">Or</Divider>
           <SelectFile />
