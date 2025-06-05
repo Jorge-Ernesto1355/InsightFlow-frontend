@@ -41,6 +41,8 @@ const ResumeClusters = ({ clusters }: ResumeClustersProps) => {
         {clusters.map((cluster) => {
           const color = getColorBadge(getRiskLevelToText(cluster.riskLevel));
           const text = getRiskLevelToText(cluster.riskLevel);
+          const total = clusters.reduce((acc, curr) => acc + curr.size, 0);
+          const percentage = (cluster.size / total) * 100;
 
           return (
             <div key={cluster.cluster_id} className="flex items-center">
@@ -56,11 +58,11 @@ const ResumeClusters = ({ clusters }: ResumeClustersProps) => {
                     </span>
                   </div>
                   <span className="text-sm font-medium  flex justify-end ">
-                    {Math.round((cluster.size / 635) * 100)}%
+                    {percentage.toFixed(2)}%
                   </span>
                 </div>
 
-                <PorcentageBar value={Math.round((cluster.size / 635) * 100)} />
+                <PorcentageBar value={percentage.toFixed(2)} />
               </div>
             </div>
           );
