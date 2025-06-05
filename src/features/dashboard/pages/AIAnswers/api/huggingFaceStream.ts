@@ -2,24 +2,30 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ChatMessage, ChatStreamOptions } from "../types/types";
 import { useCallback, useRef, useState } from "react";
 import { InferenceClient } from "@huggingface/inference";
+import { GeneralClusteringData } from "../utils/enhancePrompt/types";
+import { enhanceMessages } from "../utils/enhancePrompt/enhancedMessages";
 
 interface huggingFaceStreamProps {
   apiKey: string;
   options?: ChatStreamOptions;
   onChunk?: (chunk: string) => void;
+  data: GeneralClusteringData
 }
 
 export interface StreamResponse {
   fullResponse: string;
   isStreaming: boolean;
   currentChunk: string;
+
 }
 
 export const huggingFaceStream = ({
   apiKey,
   options = {},
+  data,
   onChunk,
 }: huggingFaceStreamProps) => {
+
   const [streamResponse, setStreamResponse] = useState<StreamResponse>({
     fullResponse: "",
     isStreaming: false,
@@ -29,6 +35,8 @@ export const huggingFaceStream = ({
   const queryClient = useQueryClient();
   const abortControllerRef = useRef<AbortController | null>(null); // renamed here
   const isStreamingRef = useRef<boolean>(false);
+
+  
 
   const streamingMutation = useMutation({
     mutationFn: async (messages: ChatMessage[]) => {
@@ -58,10 +66,14 @@ export const huggingFaceStream = ({
       }));
 
       try {
+
+        const enhancedMessages = enhanceMessages(messages,data);
+     
+
         const stream = client.chatCompletionStream({
           provider: "hf-inference",
           model: options.model || "HuggingFaceH4/zephyr-7b-beta",
-          messages: messages.map((msg) => ({
+          messages: enhancedMessages.map((msg) => ({
             role: msg.role,
             content: msg.content,
           })),
