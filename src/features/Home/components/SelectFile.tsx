@@ -25,7 +25,11 @@ const props: UploadProps = {
 
 const SelectFile = () => (
   <Upload {...props}>
-    <Button className="mt-2 p-5" icon={<UploadOutlined />}>
+    <Button
+      className="mt-2 p-5 bg-blue-500 text-white hover:bg-blue-600 transition-colors duration-300 rounded-lg flex items-center justify-center"
+      style={{ width: "100%" }}
+      icon={<UploadOutlined />}
+    >
       <span className="font-inter">Select CSV File</span>
     </Button>
   </Upload>
