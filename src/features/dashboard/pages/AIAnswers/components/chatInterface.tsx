@@ -27,7 +27,7 @@ const createMessage = (
   content,
   timestamp: timestamp ?? getHoursAndMiutes(new Date()),
   error: null,
-  isLoading
+  isLoading,
 });
 
 const createInitialMessages = (): ChatMessage[] => [
@@ -47,48 +47,55 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ apiKey }) => {
   const [messages, setMessages] = useState<ChatMessage[]>([
     ...createInitialMessages(),
   ]);
+
+  const { sendMessage, cancelStream, isLoading, error, isError } =
+    huggingFaceStream({
+      apiKey,
+      onChunk: (newChunk) => handleStreamChunk(newChunk),
+      options: HUGGING_FACE_CONFIG,
+      data: mockData.data,
+    });
+
   const chatEndRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   const handleStreamChunk = useCallback((newChunk: string) => {
+    if (isLoading) {
+      setMessages((prev) => [
+        ...prev,
+        createMessage("assistant", "", undefined, true),
+      ]);
+    }
+
     setMessages((prev) => {
       const lastMessage = prev[prev.length - 1];
 
       // Si no hay último mensaje o no es del asistente, crear uno nuevo
+
       if (!lastMessage || lastMessage.role !== "assistant") {
-        const newAssistantMessage = createMessage("assistant", newChunk);
+        const newAssistantMessage = createMessage(
+          "assistant",
+          newChunk,
+          getHoursAndMiutes(new Date(0)),
+          false
+        );
         return [...prev, newAssistantMessage];
       }
 
+      console.log("cambio");
       // Actualizar el contenido del último mensaje del asistente
       return [
         ...prev.slice(0, -1),
-        { ...lastMessage, content: lastMessage.content + newChunk },
+        {
+          ...lastMessage,
+          content: lastMessage.content + newChunk,
+          isLoading: false,
+        },
       ];
     });
   }, []);
-
-  
-  const {
-    sendMessage,
-    cancelStream,
-    isLoading,
-    error,
-    isError,
-  } = huggingFaceStream({
-    apiKey,
-    onChunk: (newChunk) => handleStreamChunk(newChunk),
-    options: HUGGING_FACE_CONFIG,
-    data: mockData.data
-  });
-  
-  useEffect(() => { 
-    if(isLoading) {
-      setMessages((prev)=> ([...prev, createMessage("assistant", "", getHoursAndMiutes(new Date(0)), true)]))
-    }
-  }, [isLoading]);
 
   useEffect(() => {
     if (isError && error) {
