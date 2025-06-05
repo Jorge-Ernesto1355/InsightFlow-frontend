@@ -1,10 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Card, Tooltip } from "antd";
 import { InfoCircle } from "iconoir-react";
-
-type CentroidChartProps = {
-  mockData: any;
-};
+import { GeneralClusteringData } from "../AIAnswers/utils/enhancePrompt/types";
 
 type Centroid = {
   x: number;
@@ -22,7 +19,7 @@ const colors = [
   "#ec4899", // rosa
 ];
 
-const CentroidsDistribution: React.FC<CentroidChartProps> = ({ mockData }) => {
+const CentroidsDistribution = ({ data }: { data: GeneralClusteringData }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [tooltipData, setTooltipData] = useState<{
     cluster: number;
@@ -34,7 +31,7 @@ const CentroidsDistribution: React.FC<CentroidChartProps> = ({ mockData }) => {
     y: number;
   }>({ x: 0, y: 0 });
 
-  const centroids: Centroid[] = (mockData?.data?.centroids || []).map(
+  const centroids: Centroid[] = (data?.centroids || []).map(
     (coords: number[], idx: number) => {
       return {
         x: coords[0], // PacienteID
@@ -45,7 +42,7 @@ const CentroidsDistribution: React.FC<CentroidChartProps> = ({ mockData }) => {
     }
   );
 
-  const clusterSizes = mockData?.data?.clusters || {};
+  const clusterSizes = data?.clusters || {};
 
   const normalize = (val: number, min: number, max: number) => {
     if (max === min) return 0.5;
@@ -179,7 +176,7 @@ const CentroidsDistribution: React.FC<CentroidChartProps> = ({ mockData }) => {
       setTooltipData(found);
       if (!found) setTooltipPosition({ x: 0, y: 0 });
     };
-  }, [mockData]);
+  }, [data]);
 
   return (
     <Card className="h-full flex flex-col rounded-lg shadow border-gray-200">
