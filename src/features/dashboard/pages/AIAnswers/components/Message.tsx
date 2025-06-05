@@ -45,10 +45,12 @@ const Message: React.FC<{ message: ChatMessage }> = ({ message }) => {
             {message.isLoading ? <SimpleLoader /> : message.content}
           </p>
           <Flex className="items-center ">
-            {!message.isLoading && !message.error && (<>
-              <div className="text-xs opacity-70 ">{message.timestamp}</div>
-              {!isUser && <CopyIconButton text={message.content} />}
-            </>)}
+            {!message.isLoading && !message.error && (
+              <>
+                <div className="text-xs opacity-70 ">{message.timestamp}</div>
+                {!isUser && <CopyIconButton text={message.content} />}
+              </>
+            )}
           </Flex>
         </div>
       </div>
