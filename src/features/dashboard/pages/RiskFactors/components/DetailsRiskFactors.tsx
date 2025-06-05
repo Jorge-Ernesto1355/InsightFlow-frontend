@@ -2,6 +2,7 @@ import { Card, Table, Tag } from "antd";
 import { formatTableData } from "../utils/formatTableData";
 import { mockData } from "../../../../../../mockData";
 import Badge from "../../../../../shared/components/Badge";
+import { GeneralClusteringData } from "../../AIAnswers/utils/enhancePrompt/types";
 
 export const getImpactColor = (level: string) => {
   switch (level) {
@@ -31,7 +32,7 @@ export const getImpactColorHex = (level: string): string => {
   }
 };
 
-const DetailsRiskFactors = () => {
+const DetailsRiskFactors = ({ data }: { data: GeneralClusteringData }) => {
   // Columnas para la tabla
   const columns = [
     {
@@ -74,7 +75,7 @@ const DetailsRiskFactors = () => {
     },
   ];
 
-  const data = formatTableData(mockData.data.cluster_summaries);
+  const dataSource = formatTableData(data?.cluster_summaries || []);
   return (
     <Card className=" mt-5 w-full h-full border border-gray-200 rounded-lg shadow transition-shadow hover:shadow-lg p-5">
       <span className="text-2xl font-bold font-inter">
@@ -83,7 +84,7 @@ const DetailsRiskFactors = () => {
       <p className="font-inter text-md text-gray-600">
         Detailed information about the risk factors clusters
       </p>
-      <Table dataSource={data} columns={columns} pagination={false} />
+      <Table dataSource={dataSource} columns={columns} pagination={false} />
     </Card>
   );
 };
