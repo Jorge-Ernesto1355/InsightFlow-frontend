@@ -39,7 +39,7 @@ const Sidebar = () => {
     <div className="">
       <div className="flex justify-start items-center space-x-2 ml-3">
         <StatsUpSquare color={palletesCollor.primary} fontSize={20} />
-        <span className=" font-bold text-lg font-inter ">DataCluster</span>
+        <span className=" font-bold text-lg font-inter ">InsightFlow</span>
       </div>
       <Divider />
       <ul className="flex justify-center items-start space-x-4 flex-col">
