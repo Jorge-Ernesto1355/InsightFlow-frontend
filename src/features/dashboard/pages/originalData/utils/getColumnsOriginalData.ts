@@ -5,16 +5,7 @@ interface OriginalDataRow {
 type OriginalData = OriginalDataRow[][];
 
 const getColumnsOriginalData = (data: OriginalData) => {
-  if (
-    !Array.isArray(data) ||
-    data.length === 0 ||
-    !Array.isArray(data[0]) ||
-    data[0].length === 0 ||
-    typeof data[0][0] !== "object" ||
-    data[0][0] === null
-  ) {
-    return [];
-  }
+  if (typeof data === "undefined" || data === null) return [];
   return Object.keys(data[0][0]).map((key) => ({ title: key, dataIndex: key }));
 };
 
