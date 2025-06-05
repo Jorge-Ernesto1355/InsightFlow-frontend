@@ -6,6 +6,7 @@ import Message from "./Message";
 import ChatInput from "./ChatInput";
 import { Card, Col, Flex, message, Row } from "antd";
 import { getHoursAndMiutes } from "../utils/getHoursAndMinute";
+import { mockData } from "../../../../../../mockData";
 
 const INITIAL_MESSAGE_CONTENT =
   "Hi, I'm your data analysis assistant. You can ask me about clusters, patterns, risk factors, or any insights you'd like to uncover in your data.";
@@ -18,13 +19,15 @@ const HUGGING_FACE_CONFIG = {
 const createMessage = (
   role: "user" | "assistant",
   content: string,
-  timestamp?: string
+  timestamp?: string,
+  isLoading?: boolean
 ): ChatMessage => ({
   id: crypto.randomUUID(),
   role,
   content,
   timestamp: timestamp ?? getHoursAndMiutes(new Date()),
   error: null,
+  isLoading
 });
 
 const createInitialMessages = (): ChatMessage[] => [
@@ -67,10 +70,10 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ apiKey }) => {
     });
   }, []);
 
+  
   const {
     sendMessage,
     cancelStream,
-
     isLoading,
     error,
     isError,
@@ -78,7 +81,14 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ apiKey }) => {
     apiKey,
     onChunk: (newChunk) => handleStreamChunk(newChunk),
     options: HUGGING_FACE_CONFIG,
+    data: mockData.data
   });
+  
+  useEffect(() => { 
+    if(isLoading) {
+      setMessages((prev)=> ([...prev, createMessage("assistant", "hola", getHoursAndMiutes(new Date(0)), true)]))
+    }
+  }, [isLoading]);
 
   useEffect(() => {
     if (isError && error) {
