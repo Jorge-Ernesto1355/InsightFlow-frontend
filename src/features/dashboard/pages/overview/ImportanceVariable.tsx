@@ -19,7 +19,7 @@ const ImportanceVariable = ({ featureImportance }: ImportanceVaraibleProps) => {
       <span className="font-inter  font-bold text-2xl">
         Importance Variable
       </span>
-      <p className="font-inter text-gray-600 mb-6">
+      <div className="font-inter text-gray-600 mb-6">
         {readableImportanceVariables.map((item) => (
           <div
             key={item.feature}
@@ -34,7 +34,7 @@ const ImportanceVariable = ({ featureImportance }: ImportanceVaraibleProps) => {
             <PorcentageBar value={item.percentage} />
           </div>
         ))}
-      </p>
+      </div>
     </Card>
   );
 };
