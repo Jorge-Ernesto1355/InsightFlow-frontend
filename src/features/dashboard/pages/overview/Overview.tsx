@@ -1,34 +1,35 @@
 import { Col, Row } from "antd";
-import { mockData } from "../../../../../mockData";
+
 import ResumeCSVFile from "./ResumeCSVFile";
 import ResumeClusters from "./ResumeClusters";
 import CentroidsDistribution from "./CentroidsDistribution";
 import ImportanceVariable from "./ImportanceVariable";
 import { ExtractClustersSummaries } from "./utils/ExtractClustersSummaries";
+import useStore from "../../../../shared/store/AIStore";
 
 const Overview = () => {
+  const data = useStore((data) => data.data);
+
   return (
     <div className=" p-4 border-1 font-inter border-gray-300 rounded-md">
       <ResumeCSVFile
-        clusters={mockData.data.clusters}
+        clusters={data.clusters}
         metadata={{
-          ...mockData.data.metadata,
+          ...data.metadata,
           time: 3000,
         }}
       />
       <Row gutter={[16, 16]} className="mt-5">
         <Col span={10}>
           <ResumeClusters
-            clusters={ExtractClustersSummaries(mockData.data.cluster_summaries)}
+            clusters={ExtractClustersSummaries(data.cluster_summaries)}
           />
         </Col>
         <Col span={10}>
-          <CentroidsDistribution mockData={mockData} />
+          <CentroidsDistribution data={data} />
         </Col>
       </Row>
-      <ImportanceVariable
-        featureImportance={mockData.data.feature_importance}
-      />
+      <ImportanceVariable featureImportance={data.feature_importance} />
     </div>
   );
 };
