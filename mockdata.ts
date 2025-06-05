@@ -712,7 +712,7 @@ export const mockData = {
             percentage: 0,
           },
           type: "numeric",
-          mean: 4.179220779220779,
+          mean: 4.179220779220779,  
           std_dev: 2.276827200199238,
           min: 1,
           max: 9,
