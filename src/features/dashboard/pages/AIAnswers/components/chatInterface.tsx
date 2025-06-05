@@ -126,14 +126,14 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
         message.error(errorMessage);
       }
     },
-    [isLoading, sendMessage]
+    [isLoading, sendMessage, messages]
   );
 
   return (
     <Card
-      className={
-        "w-full h-full min-h-full border border-gray-200 rounded-lg shadow transition-shadow hover:shadow-lg "
-      }
+      className={`w-full h-full min-h-full border border-gray-200 rounded-lg shadow transition-shadow hover:shadow-lg ${
+        className || ""
+      }`}
     >
       <Row className="h-full ">
         <Flex className="h-full flex-col w-full">
