@@ -13,7 +13,7 @@ const Overview = () => {
         clusters={mockData.data.clusters}
         metadata={{
           ...mockData.data.metadata,
-          time: mockData.processing_time_ms,
+          time: 3000,
         }}
       />
       <Row gutter={[16, 16]} className="mt-5">
