@@ -4,11 +4,11 @@ import { Col, Row } from "antd";
 import Considerations from "./components/Considerations";
 import SuggestedQuestions from "./components/SuggestedQuestions";
 import { questions } from "./utils/questions";
+import useStore from "../../../../shared/store/AIStore";
 
 const AIAnswers = () => {
-  
-          
-  
+  const data = useStore((data) => data.data);
+
   return (
     <div className="p-4 font-inter  h-full">
       <span className="text-3xl font-semibold font-inter text-black">
@@ -20,7 +20,10 @@ const AIAnswers = () => {
 
       <Row className=" h-3/4" gutter={[16, 16]}>
         <Col span={15}>
-          <ChatInterface apiKey={import.meta.env.VITE_HF_API_TOKEN} />
+          <ChatInterface
+            apiKey={import.meta.env.VITE_HF_API_TOKEN}
+            data={data}
+          />
         </Col>
         <Col span={7} className="flex flex-col space-y-4">
           <SuggestedQuestions questions={questions} />
