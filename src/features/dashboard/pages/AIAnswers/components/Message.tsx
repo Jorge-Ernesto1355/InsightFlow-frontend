@@ -3,6 +3,8 @@ import { ChatMessage } from "../types/types";
 import CopyIconButton from "./Copy";
 import { Flex } from "antd";
 
+import SimpleLoader from "./AILoaderThinking";
+
 const Message: React.FC<{ message: ChatMessage }> = ({ message }) => {
   const isUser = message.role === "user";
 
@@ -40,11 +42,13 @@ const Message: React.FC<{ message: ChatMessage }> = ({ message }) => {
             className="whitespace-pre-wrap break-words font-inter"
             style={{ margin: 0 }}
           >
-            {message.content}
+            {message.isLoading ? <SimpleLoader /> : message.content}
           </p>
           <Flex className="items-center ">
-            <div className="text-xs opacity-70 ">{message.timestamp}</div>
-            {!isUser && <CopyIconButton text={message.content} />}
+            {!message.isLoading && !message.error && (<>
+              <div className="text-xs opacity-70 ">{message.timestamp}</div>
+              {!isUser && <CopyIconButton text={message.content} />}
+            </>)}
           </Flex>
         </div>
       </div>
