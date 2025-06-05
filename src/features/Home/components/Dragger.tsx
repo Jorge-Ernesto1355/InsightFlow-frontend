@@ -40,11 +40,13 @@ const Dragger = () => {
       <div className="p-1 rounded-full bg-gray-200 flex justify-center items-center w-16 h-16 mx-auto mb-2">
         <CloudUpload width={40} height={40} />
       </div>
-      <h3 className="font-semibold text-xl">Drag & drop your CSV file here </h3>
-      <p className="text-gray-400 ">or click to browse files</p>
-      <div className="flex justify-center items-center m-2 space-x-2">
+      <h3 className="font-semibold text-xl font-inter">
+        Drag & drop your CSV file here{" "}
+      </h3>
+      <p className="text-gray-500 font-inter ">or click to browse files</p>
+      <div className="flex justify-center  m-2 space-x-2">
         <Archive />
-        <p className="text-gray-400 ">Upload CSV file</p>
+        <p className="text-gray-400  font-inter">Only csv file are supported</p>
       </div>
     </DraggerAntd>
   );
