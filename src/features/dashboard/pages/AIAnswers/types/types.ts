@@ -4,6 +4,7 @@ export interface ChatMessage {
   id: string;
   timestamp: string;
   error: string | null;
+  isLoading?:boolean
 }
 
 export interface StreamChunk {
